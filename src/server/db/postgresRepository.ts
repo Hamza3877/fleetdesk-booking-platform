@@ -19,21 +19,27 @@ const isLocalDatabase = (url: string) => /@(localhost|127\.0\.0\.1)[:/]/.test(ur
 export function createSql(url: string): Sql {
   const isLocal = isLocalDatabase(url);
 
-  return postgres(url, {
+  // max_pipeline is a real postgres.js option that its type definitions leave out, so the options live in a variable.
+  const options = {
     // Supabase's pooled connection (port 6543) doesn't support prepared statements.
     prepare: false,
     // Supabase needs SSL. Local databases (tests) don't.
-    ssl: isLocal ? false : "require",
+    ssl: isLocal ? (false as const) : ("require" as const),
     // On serverless hosts every instance opens its own connections, so keep the pool small.
     // The free local database (PGlite, used by `npm run db:local` and the tests) is a
     // single-connection engine, so it gets exactly one. Supabase handles several fine.
     // On Vercel every function instance gets just one, so many instances can't use up Supabase's connection limit.
     max: Number(process.env.DATABASE_POOL_MAX ?? (isLocal || process.env.VERCEL ? 1 : 3)),
+    // One query at a time per connection. A page often asks for two things at once (the layout and the page),
+    // and sending them back-to-back down one pooled connection can leave Supabase's pooler waiting forever.
+    max_pipeline: 1,
     idle_timeout: 20,
     connect_timeout: 15,
     fetch_types: false,
     onnotice: () => {},
-  });
+  };
+
+  return postgres(url, options);
 }
 
 // ---------- row <-> object mappers ----------
