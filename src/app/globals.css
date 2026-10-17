@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/* Dark mode is switched by adding the "dark" class to <html> (see ThemeProvider). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens. Components use names like bg-card or text-muted-foreground
+ * instead of raw colours, so light/dark mode and re-branding only touch this file.
+ */
+:root {
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --muted: #f1f5f9;
+  --muted-foreground: #475569;
+  --border: #e2e8f0;
+  --input: #cbd5e1;
+  --primary: #4338ca;
+  --primary-hover: #3730a3;
+  --primary-foreground: #ffffff;
+  --accent: #eef2ff;
+  --accent-foreground: #3730a3;
+  --success: #15803d;
+  --success-bg: #dcfce7;
+  --warning: #b45309;
+  --warning-bg: #fef3c7;
+  --danger: #b91c1c;
+  --danger-bg: #fee2e2;
+  --info: #0369a1;
+  --info-bg: #e0f2fe;
+  --ring: #6366f1;
+  --chart-1: #4f46e5;
+  --chart-2: #0d9488;
+  --chart-3: #d97706;
+}
+
+.dark {
+  --background: #0b1020;
+  --foreground: #e2e8f0;
+  --card: #121933;
+  --muted: #1a2342;
+  --muted-foreground: #a5b0c8;
+  --border: #27304f;
+  --input: #33406a;
+  --primary: #818cf8;
+  --primary-hover: #a5b4fc;
+  --primary-foreground: #0b1020;
+  --accent: #1e2750;
+  --accent-foreground: #c7d2fe;
+  --success: #4ade80;
+  --success-bg: #0f2e1d;
+  --warning: #fbbf24;
+  --warning-bg: #35280a;
+  --danger: #f87171;
+  --danger-bg: #3b1416;
+  --info: #38bdf8;
+  --info-bg: #0c2a3d;
+  --ring: #a5b4fc;
+  --chart-1: #818cf8;
+  --chart-2: #2dd4bf;
+  --chart-3: #fbbf24;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --color-ring: var(--ring);
+
+  /* System font stack: no network request, so pages render fast. */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    font-family: var(--font-sans);
+    background: var(--background);
+    color: var(--foreground);
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  dialog::backdrop {
+    background: rgb(2 6 23 / 0.6);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fade-in {
+  /* "both" keeps the content hidden during the delay and visible afterwards */
+  animation: fade-in 0.35s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

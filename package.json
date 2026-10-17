@@ -1,0 +1,67 @@
+{
+  "name": "fleetdesk",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Booking and operations SaaS for small rental businesses, built with Next.js, React and TypeScript.",
+  "engines": {
+    "node": ">=20.9"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "smoke": "node scripts/smoke.mjs",
+    "check": "npm run lint && npm run typecheck && npm run test && npm run build",
+    "db:setup": "tsx scripts/db.ts setup",
+    "db:reset": "tsx scripts/db.ts reset",
+    "db:local": "tsx scripts/local-postgres.ts",
+    "test:e2e": "playwright test",
+    "test:a11y": "playwright test e2e/accessibility.spec.ts"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.9.1",
+    "@reduxjs/toolkit": "^2.13.0",
+    "@tanstack/react-query": "^5.104.3",
+    "clsx": "^2.1.1",
+    "framer-motion": "^14.3.0",
+    "graphql": "^16.14.2",
+    "lucide-react": "^1.58.0",
+    "next": "^16.4.2",
+    "postgres": "^3.4.9",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-hook-form": "^7.90.0",
+    "react-redux": "^9.3.0",
+    "recharts": "^3.10.1",
+    "tailwind-merge": "^3.7.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@electric-sql/pglite": "^0.5.10",
+    "@electric-sql/pglite-socket": "^0.2.13",
+    "@playwright/test": "1.56.0",
+    "@tailwindcss/postcss": "^4.3.3",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.2",
+    "jsdom": "^29.1.1",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5"
+  },
+  "overrides": {
+    "playwright-core": "1.56.0"
+  }
+}
