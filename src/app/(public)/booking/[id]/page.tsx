@@ -43,7 +43,7 @@ export default async function BookingConfirmationPage({ params, searchParams }: 
         <h1 className="mt-4 text-3xl font-bold">{isPaid ? "You're all set!" : "Payment not completed yet"}</h1>
         <p className="mt-2 text-muted-foreground">
           {isPaid
-            ? `Thanks, ${booking.customerName.split(" ")[0]}. A confirmation was sent to ${booking.customerEmail}.`
+            ? `Thanks, ${booking.customerName.split(" ")[0]}. Your booking is confirmed. Keep the reference below for pickup.`
             : "Your car is held for a short time. Finish paying to confirm your booking."}
         </p>
       </div>
