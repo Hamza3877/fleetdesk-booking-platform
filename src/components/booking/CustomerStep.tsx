@@ -27,7 +27,7 @@ export function CustomerStep({ defaultValues, onNext, onBack }: CustomerStepProp
         label="Email"
         type="email"
         autoComplete="email"
-        hint="We send your confirmation here."
+        hint="We use this to contact you about your booking."
         error={errors.customerEmail?.message}
         {...register("customerEmail")}
       />
