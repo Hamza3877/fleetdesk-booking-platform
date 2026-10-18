@@ -9,6 +9,22 @@ A booking and operations app for a small car rental business. Customers pick a c
 | Owner login | `owner@fleetdesk.dev` / `demo1234` (the login page has a "Fill in demo login" button) |
 | Test card   | `4242 4242 4242 4242`, any future date, any CVC (`4000 0000 0000 0002` is declined)   |
 
+## Screenshots
+
+| Home                                    | Car page                                                              |
+| --------------------------------------- | --------------------------------------------------------------------- |
+| ![Home page](docs/screenshots/home.png) | ![Car page with availability calendar](docs/screenshots/car-page.png) |
+
+| Booking flow                                         | Owner dashboard                                      |
+| ---------------------------------------------------- | ---------------------------------------------------- |
+| ![Booking review step](docs/screenshots/booking.png) | ![Dashboard overview](docs/screenshots/overview.png) |
+
+| Fleet List Views Customer and Owner                      |
+| -------------------------------------------------------- | ---------------------------------------------------------- |
+| ![Fleet List Views Customer](docs/screenshots/fleet.png) | ![Fleet List Views Owner](docs/screenshots/fleet-table.png |
+
+![Bookings table](docs/screenshots/bookings-table.png)
+
 This is a portfolio project. Payments run in test mode and no real money moves. The demo data is made up, and the owner can reset it from Settings.
 
 ## What it does
