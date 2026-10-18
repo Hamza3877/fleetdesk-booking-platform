@@ -11,19 +11,33 @@ A booking and operations app for a small car rental business. Customers pick a c
 
 ## Screenshots
 
-[Home page](docs/screenshots/home.png)
+### Home
 
-[Car page with availability calendar](docs/screenshots/car-page.png)
+![Home page](docs/screenshots/home.png)
 
-[Booking review step](docs/screenshots/booking.png)
+### Fleet and filters
 
-[Dashboard overview](docs/screenshots/overview.png)
+![Fleet list with filters](docs/screenshots/fleet.png)
 
-[Fleet List Views Customer](docs/screenshots/fleet.png)
+### Car page with availability calendar
 
-[Fleet List Views Owner](docs/screenshots/fleet-table.png)
+![Car page with availability calendar](docs/screenshots/car-page.png)
 
-[Bookings table](docs/screenshots/bookings-table.png)
+### Booking flow
+
+![Booking review and pay step](docs/screenshots/booking.png)
+
+### Owner dashboard
+
+![Dashboard overview with revenue, occupancy and charts](docs/screenshots/overview.png)
+
+### Bookings table
+
+![Bookings table with search, filters and actions](docs/screenshots/bookings-table.png)
+
+### Fleet table
+
+![Fleet table](docs/screenshots/fleet-table.png)
 
 This is a portfolio project. Payments run in test mode and no real money moves. The demo data is made up, and the owner can reset it from Settings.
 
