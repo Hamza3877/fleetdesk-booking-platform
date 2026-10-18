@@ -35,7 +35,7 @@ export function SiteFooter({ settings }: { settings: BusinessSettings }) {
         </ul>
       </div>
       <p className="border-t border-border py-4 text-center text-xs text-muted-foreground">
-        Portfolio project. Payments run in test mode and no real charges are made.
+        Summit Rentals • Portfolio Demo • Built with Next.js & Supabase
       </p>
     </footer>
   );

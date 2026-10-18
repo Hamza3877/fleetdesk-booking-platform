@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/Badge";
 import { Card } from "@/components/ui/Card";
 import { VehicleImage } from "@/components/vehicles/VehicleImage";
@@ -19,9 +22,16 @@ export function VehicleCard({ vehicle, dates, headingLevel: Heading = "h3" }: Ve
   const query = dates ? `?startDate=${dates.startDate}&endDate=${dates.endDate}` : "";
 
   return (
+        <motion.div
+  initial={{ opacity: 0, y: 20 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: true, amount: 0.1 }}
+  transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+  whileHover={{ y: -6 }}
+>
     <Card className="group overflow-hidden transition-shadow hover:shadow-md">
       <Link href={`/vehicles/${vehicle.id}${query}`} className="block focus-visible:outline-offset-[-2px]">
-        <VehicleImage vehicle={vehicle} className="aspect-[16/10]" />
+        <VehicleImage vehicle={vehicle} className="aspect-[16/10] transition-transform duration-500 group-hover:scale-105" />
         <div className="space-y-3 p-4">
           <div className="flex items-start justify-between gap-2">
             <div>
@@ -38,5 +48,6 @@ export function VehicleCard({ vehicle, dates, headingLevel: Heading = "h3" }: Ve
         </div>
       </Link>
     </Card>
+    </motion.div>
   );
 }
