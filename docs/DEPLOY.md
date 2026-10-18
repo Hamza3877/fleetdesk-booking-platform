@@ -42,17 +42,17 @@ You do not need to create any tables. FleetDesk creates its tables and loads the
 1. Go to vercel.com, sign in with GitHub, click **Add New, Project**, and import `fleetdesk`.
 2. Leave the framework as **Next.js**. Open **Environment Variables** and add:
 
-| Name | Value |
-|---|---|
-| `DATABASE_URL` | the Supabase string from Part 2 |
-| `AUTH_SECRET` | any long random text, at least 32 characters |
+| Name                   | Value                                                                  |
+| ---------------------- | ---------------------------------------------------------------------- |
+| `DATABASE_URL`         | the Supabase string from Part 2                                        |
+| `AUTH_SECRET`          | any long random text, at least 32 characters                           |
 | `NEXT_PUBLIC_SITE_URL` | `https://fleetdesk.vercel.app` for now (you will correct it in step 5) |
 
 3. Click **Deploy**. Wait about 2 minutes.
 4. Click the preview image to open your live site. **First check:** add `/api/health` to the address. You should see:
 
 ```json
-{"ok":true,"database":"postgres","vehicles":12}
+{ "ok": true, "database": "postgres", "vehicles": 12 }
 ```
 
 5. In Vercel open **Settings, Domains** and copy your real address (for example `fleetdesk-yourname.vercel.app`). Put it into `NEXT_PUBLIC_SITE_URL` (Settings, Environment Variables), then **Deployments, the three dots, Redeploy**. This makes the link previews (when you share on LinkedIn or WhatsApp) use the right address.
@@ -70,20 +70,13 @@ Every time you push to GitHub, Vercel redeploys automatically.
 6. Refresh the page and open it on your phone. The booking is still there (it is saved in Supabase).
 7. Settings, **Reset demo data**. Everything returns to the sample data.
 
-## Part 5. Before you share the link
-
-- Run **Settings, Reset demo data** so the dashboard shows recent numbers (the sample dates are relative to the day you reset).
-- Put the live link, the GitHub link and the demo login at the top of your README, your CV and your LinkedIn.
-- Run Lighthouse on the live link (Chrome, F12, Lighthouse tab) and put the real scores in the README.
-- The demo login is public on purpose, so recruiters can look around. If someone changes things, Reset demo data fixes it in one click.
-
 ## If something goes wrong
 
-| What you see | What to do |
-|---|---|
-| `/api/health` says `"ok":false` | `DATABASE_URL` is wrong. Check it is the **Transaction pooler** string (port **6543**), the password is correct with no brackets, and the password has no symbols. Fix it in Vercel, then Redeploy. |
-| Pages show an error after the site was unused for a week or more | Free Supabase projects pause when unused. Open the Supabase dashboard and click **Restore project**. |
-| `/api/health` is ok but the dashboard charts look empty | The sample dates are old. Sign in, Settings, **Reset demo data**. |
-| Vercel build fails | Open the build log. In **Settings, General**, set **Node.js Version** to 22.x and redeploy. |
-| Login says wrong password | Use the demo login from the login page, or the `OWNER_EMAIL` and `OWNER_PASSWORD` you set in Vercel. |
-| Changes you make in code don't appear | Push to GitHub (`git add .`, `git commit -m "message"`, `git push`) and wait for Vercel to redeploy. |
+| What you see                                                     | What to do                                                                                                                                                                                          |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/api/health` says `"ok":false`                                  | `DATABASE_URL` is wrong. Check it is the **Transaction pooler** string (port **6543**), the password is correct with no brackets, and the password has no symbols. Fix it in Vercel, then Redeploy. |
+| Pages show an error after the site was unused for a week or more | Free Supabase projects pause when unused. Open the Supabase dashboard and click **Restore project**.                                                                                                |
+| `/api/health` is ok but the dashboard charts look empty          | The sample dates are old. Sign in, Settings, **Reset demo data**.                                                                                                                                   |
+| Vercel build fails                                               | Open the build log. In **Settings, General**, set **Node.js Version** to 22.x and redeploy.                                                                                                         |
+| Login says wrong password                                        | Use the demo login from the login page, or the `OWNER_EMAIL` and `OWNER_PASSWORD` you set in Vercel.                                                                                                |
+| Changes you make in code don't appear                            | Push to GitHub (`git add .`, `git commit -m "message"`, `git push`) and wait for Vercel to redeploy.                                                                                                |
