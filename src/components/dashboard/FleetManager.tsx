@@ -41,6 +41,8 @@ export function FleetManager() {
     onSettled: () => setToDelete(null),
   });
 
+  // Newest vehicles first. The sort is stable, so cars added at the same time keep their order.
+const newestFirst = [...(data ?? [])].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   const columns: Column<Vehicle>[] = [
     {
       key: "vehicle",
@@ -103,7 +105,7 @@ export function FleetManager() {
         <DataTable
           caption="Fleet"
           columns={columns}
-          rows={data ?? []}
+         rows={newestFirst}
           getRowKey={(vehicle) => vehicle.id}
           loading={isPending}
           empty={

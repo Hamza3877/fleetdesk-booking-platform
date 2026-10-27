@@ -16,6 +16,8 @@ import { useToast } from "@/components/ui/Toast";
 import { api, errorMessage } from "@/lib/api";
 import { settingsSchema } from "@/lib/schemas";
 import type { BusinessSettings } from "@/types";
+// Set to true to show the "Reset demo data" button in Settings again.
+const SHOW_DEMO_RESET = false;
 
 export function SettingsForm() {
   const queryClient = useQueryClient();
@@ -99,6 +101,7 @@ export function SettingsForm() {
           </Button>
         </Card>
 
+{SHOW_DEMO_RESET && (
         <Card className="flex items-center justify-between gap-4 p-6">
           <div>
             <h2 className="font-semibold">Demo data</h2>
@@ -110,6 +113,7 @@ export function SettingsForm() {
             Reset demo data
           </Button>
         </Card>
+        )}
       </div>
 
       <Modal open={confirmingReset} onClose={() => setConfirmingReset(false)} title="Reset demo data?">

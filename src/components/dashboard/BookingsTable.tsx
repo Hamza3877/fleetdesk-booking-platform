@@ -45,6 +45,7 @@ export function BookingsTable() {
     queryKey: ["bookings", effectiveQuery],
     queryFn: () => api<Paginated<BookingListItem>>(`/api/bookings?${bookingQueryToParams(effectiveQuery)}`),
     placeholderData: keepPreviousData, // keep showing the old rows while the next page loads
+  staleTime: 0,// always fetch fresh bookings when this page opens
   });
 
   const statusMutation = useBookingStatusMutation();
