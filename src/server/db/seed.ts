@@ -157,6 +157,7 @@ export function buildSeedData(today: string = todayISO()): Database {
       const customerName = pick(customerNames);
       const nameSlug = customerName.toLowerCase().replace(" ", ".");
       const leadDays = between(2, 21);
+            const createdOn = addDays(startDate, -leadDays);
 
       bookings.push({
         id: `bk_${String(bookings.length + 1).padStart(3, "0")}`,
@@ -170,7 +171,7 @@ export function buildSeedData(today: string = todayISO()): Database {
         totalPrice: days * vehicle.pricePerDay,
         status,
         paymentStatus,
-        createdAt: `${addDays(startDate, -leadDays)}T10:00:00.000Z`,
+        createdAt: `${createdOn > today ? addDays(today, -1) : createdOn}T10:00:00.000Z`,
       });
     }
   }
