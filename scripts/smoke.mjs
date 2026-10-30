@@ -1,3 +1,9 @@
+/**
+ * End-to-end smoke test against a RUNNING server.
+ *   1) npm run build && npm start      (or npm run dev)
+ *   2) npm run smoke                   (optionally: BASE_URL=http://localhost:3000 npm run smoke)
+ * It walks through the real customer and owner flows over HTTP and prints PASS / FAIL for each step.
+ */
 const BASE = process.env.BASE_URL ?? "http://localhost:3000";
 let cookie = "";
 let failures = 0;
@@ -19,7 +25,7 @@ async function request(path, { method = "GET", body, auth = false } = {}) {
   });
   const text = await response.text();
   let json = null;
-  try { json = JSON.parse(text); } catch {}
+  try { json = JSON.parse(text); } catch { /* HTML page */ }
   return { status: response.status, json, text, headers: response.headers };
 }
 
@@ -27,6 +33,7 @@ const addDays = (iso, n) => new Date(Date.parse(iso) + n * 86400000).toISOString
 const today = new Date().toISOString().slice(0, 10);
 const customer = { customerName: "Smoke Tester", customerEmail: "smoke@example.com", customerPhone: "+1 555 0199" };
 
+// ---- Public pages render ----
 for (const path of ["/", "/vehicles", "/vehicles?category=suv&maxPrice=100", "/login"]) {
   const page = await request(path);
   check(`page ${path} returns 200`, page.status === 200, String(page.status));
@@ -38,20 +45,25 @@ check("vehicle list is server-rendered with real data", list.text.includes("Toyo
 const missing = await request("/vehicles/does-not-exist");
 check("unknown vehicle shows 404", missing.status === 404, String(missing.status));
 
+// ---- Public API ----
 const vehicles = (await request("/api/vehicles")).json;
 check("API lists available vehicles only", Array.isArray(vehicles) && vehicles.length > 0 && vehicles.every((v) => v.status === "available"));
 const vehicle = vehicles[0];
 
+// A random far-future window, so the test can be run again and again against a database
+// that keeps its data (the previous run's bookings never get in the way).
 const start = addDays(today, 120 + Math.floor(Math.random() * 500));
 const end = addDays(start, 3);
 const ranges = (await request(`/api/vehicles/${vehicle.id}/availability`)).json;
 check("availability endpoint returns booked ranges", Array.isArray(ranges));
 
+// ---- Validation ----
 const invalid = await request("/api/bookings", { method: "POST", body: { vehicleId: vehicle.id, startDate: start, endDate: start, ...customer } });
 check("rejects return date not after pickup (400)", invalid.status === 400, String(invalid.status));
 const badEmail = await request("/api/bookings", { method: "POST", body: { vehicleId: vehicle.id, startDate: start, endDate: end, ...customer, customerEmail: "nope" } });
 check("rejects invalid email (400)", badEmail.status === 400, String(badEmail.status));
 
+// ---- Customer flow: book -> checkout -> pay ----
 const created = await request("/api/bookings", { method: "POST", body: { vehicleId: vehicle.id, startDate: start, endDate: end, ...customer } });
 check("creates booking (201, pending, unpaid)", created.status === 201 && created.json.status === "pending" && created.json.paymentStatus === "unpaid", JSON.stringify(created.json));
 check("price is days x daily rate", created.json.totalPrice === vehicle.pricePerDay * 3);
@@ -71,6 +83,7 @@ check("test card pays and confirms booking", paid.status === 200 && paid.json.st
 const confirmation = await request(`/booking/${bookingId}`);
 check("confirmation page shows the reference", confirmation.status === 200 && confirmation.text.includes(paid.json.reference));
 
+// ---- Owner area is protected ----
 check("bookings API needs login (401)", (await request("/api/bookings")).status === 401);
 check("graphql needs login (401)", (await request("/api/graphql", { method: "POST", body: { query: "{ analytics { kpis { revenue } } }" } })).status === 401);
 check("dashboard redirects to /login", (await request("/dashboard")).status === 307);
@@ -88,6 +101,7 @@ for (const path of ["/dashboard", "/dashboard/bookings", "/dashboard/fleet", "/d
   check(`page ${path} opens when signed in`, (await request(path, { auth: true })).status === 200);
 }
 
+// ---- Owner flows ----
 const analytics = await request("/api/graphql", {
   method: "POST",
   auth: true,
@@ -108,6 +122,7 @@ const cancelled = await request(`/api/bookings/${bookingId}`, { method: "PATCH",
 check("owner can cancel; paid booking becomes refunded", cancelled.json?.status === "cancelled" && cancelled.json?.paymentStatus === "refunded", JSON.stringify(cancelled.json));
 const rebook = await request("/api/bookings", { method: "POST", body: { vehicleId: vehicle.id, startDate: start, endDate: end, ...customer } });
 check("cancelled dates are free again", rebook.status === 201, String(rebook.status));
+// Clean up: cancel the booking we just made so no test data blocks the calendar.
 if (rebook.status === 201) await request(`/api/bookings/${rebook.json.id}`, { method: "PATCH", auth: true, body: { status: "cancelled" } });
 
 const newVehicle = {

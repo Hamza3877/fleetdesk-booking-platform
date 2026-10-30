@@ -1,6 +1,13 @@
 import { ZodError } from "zod";
 import { AppError, ValidationError } from "@/server/errors";
 
+/**
+ * Helpers shared by every API route.
+ *
+ * `route()` wraps a handler so we never repeat try/catch: any error thrown inside
+ * (validation, not found, conflict, unexpected) becomes a JSON response with a
+ * consistent shape: { error: { message, code, details? } }.
+ */
 
 export function route<Args extends unknown[]>(handler: (...args: Args) => Promise<Response>) {
   return async (...args: Args): Promise<Response> => {
@@ -39,4 +46,5 @@ export async function readJson(request: Request): Promise<unknown> {
   }
 }
 
+/** Next.js passes dynamic URL segments (like :id) as a promise. */
 export type RouteContext<Params extends Record<string, string>> = { params: Promise<Params> };

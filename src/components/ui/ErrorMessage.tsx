@@ -1,6 +1,7 @@
 import { AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
+/** Inline error with an optional retry button. Used when a request fails. */
 export function ErrorMessage({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
     <div role="alert" className="flex items-start gap-3 rounded-xl border border-danger/30 bg-danger-bg p-4 text-danger">

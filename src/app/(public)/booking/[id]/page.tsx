@@ -23,6 +23,7 @@ export default async function BookingConfirmationPage({ params, searchParams }: 
   const { id } = await params;
   const { session_id: sessionId } = await searchParams;
 
+  // Coming back from real Stripe Checkout: ask Stripe if the payment really went through.
   if (sessionId) await confirmStripeSession(sessionId).catch(() => undefined);
 
   const booking = await getBooking(id);

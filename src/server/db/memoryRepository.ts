@@ -5,6 +5,13 @@ import { ConflictError } from "@/server/errors";
 import { buildSeedData, type Database } from "@/server/db/seed";
 import type { Repository } from "@/server/db/repository";
 
+/**
+ * Demo data kept in server memory. Used when DATABASE_URL is not set.
+ *
+ * The data sits on `globalThis` so Next.js hot reloading and separate route bundles share
+ * one copy. Every method returns copies (like a real database would), so changing a
+ * returned object never silently changes the stored one.
+ */
 
 const globalForDb = globalThis as unknown as { __fleetdeskDb?: Database };
 
@@ -13,12 +20,14 @@ function db(): Database {
   return globalForDb.__fleetdeskDb;
 }
 
+/** Start again from fresh demo data. */
 export function resetMemoryDb(today?: string): void {
   globalForDb.__fleetdeskDb = buildSeedData(today);
 }
 
 const OVERLAP_MESSAGE = "Those dates were just taken. Please pick different dates.";
 
+/** The same rule as the database constraint: one vehicle can't have two overlapping, non-cancelled bookings. */
 function overlapsAnother(booking: Pick<Booking, "id" | "vehicleId" | "startDate" | "endDate">): boolean {
   const others = db().bookings.filter(
     (item) => item.id !== booking.id && item.vehicleId === booking.vehicleId && item.status !== "cancelled",
@@ -84,6 +93,7 @@ export function createMemoryRepository(): Repository {
       },
       async insert(booking) {
         if (booking.status !== "cancelled" && overlapsAnother(booking)) throw new ConflictError(OVERLAP_MESSAGE);
+        // Same numbering as the database sequence: one more than the highest so far.
         const highest = db().bookings.reduce((max, item) => {
           const number = Number.parseInt(item.reference.replace("FD-", ""), 10);
           return Number.isFinite(number) ? Math.max(max, number) : max;

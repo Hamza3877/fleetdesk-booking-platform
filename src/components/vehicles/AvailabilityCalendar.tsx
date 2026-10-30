@@ -10,9 +10,11 @@ const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
 interface AvailabilityCalendarProps {
   bookedRanges: DateRange[];
+  /** The dates the customer is currently looking at. Highlighted in the calendar. */
   selected?: { startDate: string; endDate: string };
 }
 
+/** Month view that shows which days a vehicle is free (white), booked (grey) or selected (purple). */
 export function AvailabilityCalendar({ bookedRanges, selected }: AvailabilityCalendarProps) {
   const today = todayISO();
   const [monthStart, setMonthStart] = useState(() => `${(selected?.startDate || today).slice(0, 7)}-01`);

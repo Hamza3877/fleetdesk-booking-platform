@@ -19,6 +19,7 @@ describe("bookingDraft", () => {
 
     store.dispatch(goToStep(1));
     expect(store.getState().bookingDraft.step).toBe(1);
+    // Going back keeps what was already typed.
     expect(store.getState().bookingDraft.customer).toEqual(customer);
   });
 

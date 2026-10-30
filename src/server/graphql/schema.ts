@@ -1,8 +1,14 @@
 import { GraphQLSchema, buildSchema, graphql } from "graphql";
 import { getAnalytics } from "@/server/services/analyticsService";
 
+/**
+ * One small GraphQL endpoint (POST /api/graphql) used by the dashboard overview.
+ * The overview needs many different numbers at once (KPIs, three charts, top vehicles),
+ * so letting the page ask for exactly the fields it needs in a single request is a
+ * good fit for GraphQL. Everything else in the app is plain REST.
+ */
 
-export const typeDefs =`
+export const typeDefs = /* GraphQL */ `
   type Query {
     analytics(days: Int = 30): Analytics!
   }

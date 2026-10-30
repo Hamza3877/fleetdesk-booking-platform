@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/Button";
 
+/** Error boundary: if anything crashes while rendering a page, the user sees this instead of a blank screen. */
 export default function GlobalError({ reset }: { error: Error; reset: () => void }) {
   return (
     <main id="main" className="flex min-h-screen flex-col items-center justify-center gap-4 px-4 text-center">

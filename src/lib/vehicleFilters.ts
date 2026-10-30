@@ -5,6 +5,7 @@ export interface VehicleFilters {
   search?: string;
   category?: VehicleCategory;
   maxPrice?: number;
+  /** Only vehicles that are free for the whole range. */
   startDate?: string;
   endDate?: string;
   status?: VehicleStatus;
@@ -17,6 +18,7 @@ function first(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;
 }
 
+/** Turn the raw query string (from the URL) into safe, typed filters. Bad values are ignored. */
 export function parseVehicleFilters(raw: RawParams): VehicleFilters {
   const filters: VehicleFilters = {};
 

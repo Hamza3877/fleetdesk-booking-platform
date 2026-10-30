@@ -1,3 +1,9 @@
+/**
+ * The database tables as one piece of SQL, so the app can create them itself the first time it runs.
+ *
+ * This is an exact copy of supabase/schema.sql (the file you can paste into the Supabase SQL Editor).
+ * A test (schema.test.ts) fails if the two ever differ.
+ */
 export const SCHEMA_SQL = `-- FleetDesk database schema (PostgreSQL / Supabase).
 --
 -- How to use it on Supabase: SQL Editor -> New query -> paste this whole file -> Run.

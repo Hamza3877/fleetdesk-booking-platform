@@ -1,5 +1,11 @@
 import type { Analytics } from "@/types";
 
+/**
+ * One small wrapper around fetch() used by every browser-side request.
+ * It sends JSON, and turns error responses into a normal JavaScript Error (ApiError)
+ * that carries the server's message, so components can simply use try/catch
+ * (or the `error` that TanStack Query hands them).
+ */
 
 export class ApiError extends Error {
   constructor(
@@ -14,6 +20,7 @@ export class ApiError extends Error {
 
 interface ApiOptions {
   method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE";
+  /** A plain object. It is sent as JSON. */
   body?: unknown;
 }
 
@@ -33,11 +40,12 @@ export async function api<T = unknown>(url: string, { method = "GET", body }: Ap
   return data as T;
 }
 
+/** A readable message for any error, to show in the UI. */
 export function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "Something went wrong. Please try again.";
 }
 
-const ANALYTICS_QUERY =`
+const ANALYTICS_QUERY = /* GraphQL */ `
   query Analytics($days: Int!) {
     analytics(days: $days) {
       kpis { revenue revenueChange bookings occupancyRate averageBookingValue }
@@ -50,6 +58,7 @@ const ANALYTICS_QUERY =`
   }
 `;
 
+/** The dashboard overview asks for all its numbers in one GraphQL request. */
 export async function fetchAnalytics(days: number): Promise<Analytics> {
   const result = await api<{ data?: { analytics: Analytics }; errors?: { message: string }[] }>("/api/graphql", {
     method: "POST",

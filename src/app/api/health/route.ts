@@ -2,6 +2,10 @@ import { getRepository, isDatabaseEnabled } from "@/server/db";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * GET /api/health: "is the app and its database working?" Open it after you deploy.
+ * It never shows secrets, only whether it can read the data.
+ */
 export async function GET() {
   const database = isDatabaseEnabled() ? "postgres" : "memory";
   try {

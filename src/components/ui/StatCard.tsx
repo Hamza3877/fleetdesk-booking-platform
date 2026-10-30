@@ -6,10 +6,12 @@ interface StatCardProps {
   label: string;
   value: string;
   icon: LucideIcon;
+  /** Percent change versus the previous period. Leave out to hide the trend. */
   change?: number;
   hint?: string;
 }
 
+/** One KPI tile on the dashboard: a label, a big number and an optional trend. */
 export function StatCard({ label, value, icon: Icon, change, hint }: StatCardProps) {
   const isUp = (change ?? 0) >= 0;
   return (

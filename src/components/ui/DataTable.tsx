@@ -4,10 +4,13 @@ import { Skeleton } from "@/components/ui/Skeleton";
 import { cn } from "@/lib/utils";
 
 export interface Column<Row> {
+  /** Unique name of the column. Also used as the sort key when `sortable` is true. */
   key: string;
   header: string;
+  /** How to show one cell of this column. */
   render: (row: Row) => ReactNode;
   sortable?: boolean;
+  /** Hide on small screens to keep the table readable on phones. */
   hideOnMobile?: boolean;
   align?: "left" | "right";
 }
@@ -21,9 +24,15 @@ interface DataTableProps<Row> {
   sortKey?: string;
   sortDir?: "asc" | "desc";
   onSort?: (key: string) => void;
+  /** Shown when there are no rows. */
   empty?: ReactNode;
 }
 
+/**
+ * Generic table used by both the bookings and the fleet screens.
+ * It only draws rows: searching, sorting and paging happen on the server.
+ * The <Row> in the code is a TypeScript generic: it means "any kind of row object".
+ */
 export function DataTable<Row>({
   columns,
   rows,

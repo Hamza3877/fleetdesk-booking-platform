@@ -15,6 +15,7 @@ const links = [
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
+/** Sidebar on large screens, top bar on phones. */
 export function DashboardNav({ businessName, email }: { businessName: string; email: string }) {
   const pathname = usePathname();
   const router = useRouter();

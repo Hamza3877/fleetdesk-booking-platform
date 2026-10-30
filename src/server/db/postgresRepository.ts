@@ -4,17 +4,34 @@ import type { Repository } from "@/server/db/repository";
 import { ConflictError } from "@/server/errors";
 import type { Booking, BookingListItem, BusinessSettings, Vehicle } from "@/types";
 
+/**
+ * The real database (PostgreSQL, for example Supabase). Used when DATABASE_URL is set.
+ *
+ * Each query is plain SQL with a small "mapper" that turns a database row (snake_case)
+ * into the object the app uses (camelCase). Dates are returned as "YYYY-MM-DD" text so
+ * they match the rest of the app.
+ */
 
+// ---------- connection ----------
 
 const isLocalDatabase = (url: string) => /@(localhost|127\.0\.0\.1)[:/]/.test(url);
 
 export function createSql(url: string): Sql {
   const isLocal = isLocalDatabase(url);
 
+  // max_pipeline is a real postgres.js option that its type definitions leave out, so the options live in a variable.
   const options = {
+    // Supabase's pooled connection (port 6543) doesn't support prepared statements.
     prepare: false,
+    // Supabase needs SSL. Local databases (tests) don't.
     ssl: isLocal ? (false as const) : ("require" as const),
+    // On serverless hosts every instance opens its own connections, so keep the pool small.
+    // The free local database (PGlite, used by `npm run db:local` and the tests) is a
+    // single-connection engine, so it gets exactly one. Supabase handles several fine.
+    // On Vercel every function instance gets just one, so many instances can't use up Supabase's connection limit.
     max: Number(process.env.DATABASE_POOL_MAX ?? (isLocal || process.env.VERCEL ? 1 : 3)),
+    // One query at a time per connection. A page often asks for two things at once (the layout and the page),
+    // and sending them back-to-back down one pooled connection can leave Supabase's pooler waiting forever.
     max_pipeline: 1,
     idle_timeout: 20,
     connect_timeout: 15,
@@ -25,18 +42,22 @@ export function createSql(url: string): Sql {
   return postgres(url, options);
 }
 
+// ---------- row <-> object mappers ----------
 
 type Row = Record<string, unknown>;
 
+// "features" is a text[] column. to_json() hands it back as a normal JSON array.
 const VEHICLE_COLUMNS = (sql: Sql) => sql`
   id, name, make, model, year, category, transmission, fuel, seats, price_per_day, description,
   to_json(features) as features, color, image_url, status, featured, created_at`;
 
+/** A JavaScript list as a PostgreSQL text[] value: ["a", "b"] becomes {"a","b"} (send it with ::text[]). */
 export function toTextArray(values: string[]): string {
   const quoted = values.map((value) => `"${value.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`);
   return `{${quoted.join(",")}}`;
 }
 
+/** The booking columns to select. `prefix` is a fixed table alias written in this file (like "b."), never user input. */
 const bookingColumns = (sql: Sql, prefix = "") =>
   sql.unsafe(
     `${prefix}id, ${prefix}reference, ${prefix}vehicle_id, ${prefix}customer_name, ${prefix}customer_email, ` +
@@ -86,6 +107,7 @@ function toBooking(row: Row): Booking {
   };
 }
 
+/** Postgres reports "these dates overlap" as error 23P01 (exclusion_violation). */
 function rethrowOverlap(error: unknown): never {
   if ((error as { code?: string })?.code === "23P01") {
     throw new ConflictError("Those dates were just taken. Please pick different dates.");
@@ -93,6 +115,7 @@ function rethrowOverlap(error: unknown): never {
   throw error;
 }
 
+/** Make a user's search text safe to use inside ILIKE (% and _ are wildcards there). */
 const escapeLike = (text: string) => text.replace(/[\\%_]/g, (character) => `\\${character}`);
 
 const SORT_COLUMNS: Record<BookingQuery["sortBy"], string> = {
@@ -102,6 +125,7 @@ const SORT_COLUMNS: Record<BookingQuery["sortBy"], string> = {
   customerName: "customer_name",
 };
 
+// ---------- repository ----------
 
 export function createPostgresRepository(sql: Sql): Repository {
   return {
@@ -207,6 +231,7 @@ export function createPostgresRepository(sql: Sql): Repository {
         const pageSize = Math.min(Math.max(query.pageSize, 1), MAX_PAGE_SIZE);
         const pattern = `%${escapeLike(query.search)}%`;
 
+        // One query shape for the count and the page. "t" joins in the vehicle name for searching and display.
         const base = sql`
           from (
             select ${bookingColumns(sql, "b.")}, v.name as vehicle_name
@@ -222,6 +247,7 @@ export function createPostgresRepository(sql: Sql): Repository {
         const totalPages = Math.max(Math.ceil(total / pageSize), 1);
         const page = Math.min(Math.max(query.page, 1), totalPages);
 
+        // Column names can't be sent as values, so they come from a fixed list (never from the user).
         const column = sql(SORT_COLUMNS[query.sortBy]);
         const direction = query.sortDir === "asc" ? sql`asc` : sql`desc`;
         const rows = await sql<Row[]>`

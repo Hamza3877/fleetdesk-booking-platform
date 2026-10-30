@@ -10,6 +10,7 @@ import type { VehicleCategory } from "@/types";
 interface ImageUploadFieldProps {
   value: string;
   onChange: (value: string) => void;
+  /** Used for the preview when there is no photo yet. */
   color: string;
   category: VehicleCategory;
   name: string;
@@ -30,7 +31,7 @@ export function ImageUploadField({ value, onChange, color, category, name }: Ima
       setError(problem instanceof Error ? problem.message : "Could not read that image.");
     } finally {
       setBusy(false);
-      if (inputRef.current) inputRef.current.value = "";
+      if (inputRef.current) inputRef.current.value = ""; // allows picking the same file again
     }
   }
 

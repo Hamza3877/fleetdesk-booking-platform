@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from "vitest";
 import { addDays, todayISO } from "@/lib/dates";
 import { DEFAULT_BOOKING_QUERY } from "@/lib/bookingQuery";
@@ -16,6 +17,7 @@ import { getBookedRanges, listVehicles } from "@/server/services/vehicleService"
 
 const customer = { customerName: "Test Customer", customerEmail: "test@example.com", customerPhone: "+1 555 0100" };
 
+/** A vehicle with no bookings in the next 100 days, so tests have a free slot to use. */
 async function freeVehicle() {
   const start = addDays(todayISO(), 90);
   const [vehicle] = await listVehicles({ status: "available", startDate: start, endDate: addDays(start, 3) });

@@ -22,11 +22,16 @@ interface BookingWizardProps {
   initialDates?: { startDate: string; endDate: string };
 }
 
+/**
+ * The 3-step booking flow. It only coordinates: each step is its own component,
+ * the draft lives in Redux, and the server does the real work (see /api/bookings).
+ */
 export function BookingWizard({ vehicle, bookedRanges, initialDates }: BookingWizardProps) {
   const dispatch = useAppDispatch();
   const toast = useToast();
   const draft = useAppSelector((state) => state.bookingDraft);
 
+  // If checkout fails after the booking was created, a retry must reuse it instead of creating a second one.
   const createdBookingId = useRef<string | null>(null);
 
   useEffect(() => {
@@ -47,6 +52,7 @@ export function BookingWizard({ vehicle, bookedRanges, initialDates }: BookingWi
       window.location.assign(url);
     },
     onError: (error) => {
+      // 409 means someone else took the dates. Send the customer back to choose new ones.
       if (error instanceof ApiError && error.status === 409 && !createdBookingId.current) {
         toast.error(error.message);
         dispatch(goToStep(1));
@@ -54,6 +60,7 @@ export function BookingWizard({ vehicle, bookedRanges, initialDates }: BookingWi
     },
   });
 
+  // The draft belongs to another vehicle for a moment until startDraft runs.
   if (draft.vehicleId !== vehicle.id) return null;
 
   const stepContent = {

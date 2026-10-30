@@ -6,6 +6,16 @@ import type { Booking, BookingListItem, BookingStatus, Paginated } from "@/types
 
 type BookingPage = Paginated<BookingListItem>;
 
+/**
+ * Change a booking's status with an OPTIMISTIC update.
+ *
+ * Optimistic means: update the screen immediately, assuming the server will say yes,
+ * so the table feels instant. If the server says no, we put the old data back and show an error.
+ *
+ *   1. onMutate  : save a copy of the cached tables, then edit the cache right away
+ *   2. onError   : restore the saved copy
+ *   3. onSettled : re-fetch from the server so the screen matches the truth
+ */
 export function useBookingStatusMutation() {
   const queryClient = useQueryClient();
   const toast = useToast();

@@ -2,6 +2,11 @@ import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTML
 import { useId } from "react";
 import { cn } from "@/lib/utils";
 
+/**
+ * Form fields. Each one renders a label, the input and an error message, and wires up
+ * the accessibility attributes (aria-invalid, aria-describedby) so screen readers read
+ * the error. They work with React Hook Form: <Input label="Email" {...register("email")} />
+ */
 
 const controlStyles =
   "w-full rounded-lg border border-input bg-card px-3 text-sm text-foreground placeholder:text-muted-foreground " +

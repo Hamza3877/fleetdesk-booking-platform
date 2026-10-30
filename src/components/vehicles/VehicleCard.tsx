@@ -12,7 +12,9 @@ import type { Vehicle } from "@/types";
 
 interface VehicleCardProps {
   vehicle: Vehicle;
+  /** Pass the searched dates so the detail page opens with them already filled in. */
   dates?: { startDate: string; endDate: string };
+  /** Keep headings in order: "h2" on a page whose title is an h1, "h3" under an h2 section. */
   headingLevel?: "h2" | "h3";
 }
 

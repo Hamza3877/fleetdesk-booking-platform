@@ -21,6 +21,7 @@ const RANGES = [
 
 export function OverviewDashboard() {
   const [days, setDays] = useState(30);
+  // TanStack Query keeps this data fresh, caches each range, and gives us loading and error states for free.
   const { data, isPending, isError, error, refetch } = useQuery({ queryKey: ["analytics", days], queryFn: () => fetchAnalytics(days) });
 
   const rangeSelect = (

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/Field";
 import { api, errorMessage } from "@/lib/api";
 import { formatCurrency } from "@/lib/utils";
 
+/** Stand-in for Stripe Checkout so the whole flow works without any account. Only test cards pass. */
 export function TestCheckoutForm({ bookingId, total }: { bookingId: string; total: number }) {
   const router = useRouter();
   const [cardNumber, setCardNumber] = useState("4242 4242 4242 4242");
