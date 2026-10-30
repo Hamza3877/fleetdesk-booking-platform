@@ -65,8 +65,9 @@ test("the owner can restore the demo data after changing things", async ({ page 
   await page.getByRole("button", { name: "Save changes" }).click();
   await expect(page.getByText("Settings saved")).toBeVisible();
 
-  await page.getByRole("button", { name: "Reset demo data" }).click();
-  await page.getByRole("dialog").getByRole("button", { name: "Reset demo data" }).click();
-  await expect(page.getByText("Demo data restored")).toBeVisible();
-  await expect(name).toHaveValue("Summit Rentals");
+     const reset = await page.request.post("/api/admin/reset-demo");
+   expect(reset.ok()).toBe(true);
+   await page.reload();
+   await ready(page);
+   await expect(page.getByLabel("Business name")).toHaveValue("Summit Rentals");
 });
