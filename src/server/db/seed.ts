@@ -1,10 +1,6 @@
 import { addDays, todayISO } from "@/lib/dates";
 import type { Booking, BookingStatus, BusinessSettings, PaymentStatus, Vehicle } from "@/types";
 
-/**
- * Demo data. It is generated relative to today's date, so the dashboard charts are
- * always filled with the last 60 days and the calendars always have upcoming bookings.
- */
 
 export interface Database {
   vehicles: Vehicle[];
@@ -99,7 +95,7 @@ const customerNames = [
   "Abigail King", "Daniel Wright",
 ];
 
-/** Tiny seeded random generator so the demo data is the same on every start. */
+
 function createRandom(seed: number) {
   let state = seed;
   return () => {
@@ -128,8 +124,7 @@ export function buildSeedData(today: string = todayISO()): Database {
   const timelineStart = addDays(today, -60);
   const timelineEnd = addDays(today, 30);
 
-  // For every vehicle, walk through the timeline and drop bookings with small gaps.
-  // Walking forward means bookings of one vehicle never overlap.
+  
   for (const vehicle of vehicles) {
     if (vehicle.status === "maintenance") continue;
 
@@ -140,7 +135,7 @@ export function buildSeedData(today: string = todayISO()): Database {
       const endDate = addDays(cursor, days);
       cursor = addDays(endDate, between(0, 4));
 
-      // Leave some future gaps empty so recruiters can try booking.
+      
       if (startDate > today && random() < 0.35) continue;
 
       let status: BookingStatus;

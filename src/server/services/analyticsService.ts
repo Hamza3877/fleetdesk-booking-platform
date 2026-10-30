@@ -3,13 +3,6 @@ import { getRepository } from "@/server/db";
 import { releaseExpiredHolds } from "@/server/services/bookingService";
 import { BOOKING_STATUSES, type Analytics, type Booking } from "@/types";
 
-/**
- * Numbers for the dashboard overview.
- *
- * Rules (kept simple so they are easy to explain):
- *  - Revenue and bookings are counted on the pickup date, for paid bookings only.
- *  - Occupancy of a day = vehicles on rent that day / vehicles in service (not in maintenance).
- */
 
 const isPaid = (booking: Booking) => booking.paymentStatus === "paid";
 
