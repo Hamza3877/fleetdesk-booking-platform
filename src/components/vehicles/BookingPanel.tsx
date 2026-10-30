@@ -18,7 +18,6 @@ interface BookingPanelProps {
   initialDates?: { startDate: string; endDate: string };
 }
 
-/** Right-hand card on the vehicle page: calendar, date pickers, live price, and the "Book" button. */
 export function BookingPanel({ vehicleId, pricePerDay, bookedRanges, initialDates }: BookingPanelProps) {
   const router = useRouter();
   const today = todayISO();
@@ -28,7 +27,6 @@ export function BookingPanel({ vehicleId, pricePerDay, bookedRanges, initialDate
   const hasDates = Boolean(startDate && endDate);
   const quote = hasDates ? calculateQuote(pricePerDay, startDate, endDate) : null;
 
-  // One place decides whether the chosen dates are usable, and what to tell the customer.
   let problem = "";
   if (hasDates && endDate <= startDate) problem = "The return date must be after the pickup date.";
   else if (hasDates && hasRangeConflict(bookedRanges, { startDate, endDate })) {

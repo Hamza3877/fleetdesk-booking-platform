@@ -9,15 +9,6 @@ import { applySchema, replaceAllData } from "@/server/db/postgresAdmin";
 import { createSql } from "@/server/db/postgresRepository";
 import { buildSeedData } from "@/server/db/seed";
 
-/**
- * Runs the same test suite against BOTH data stores:
- *   - "memory"    the in-memory demo store
- *   - "postgres"  a real PostgreSQL engine (PGlite, PostgreSQL compiled to WebAssembly),
- *                 reached through the very same driver and SQL the app uses with Supabase
- *
- * If a rule works in one store but not the other, a test fails. That is how we know the
- * SQL is right without needing a Supabase account.
- */
 
 const BACKENDS = ["memory", "postgres"] as const;
 type Backend = (typeof BACKENDS)[number];
@@ -61,7 +52,6 @@ async function stop() {
   adminSql = server = pglite = undefined;
 }
 
-/** Like `describe`, but repeats the whole suite for each data store, starting from fresh demo data every test. */
 export function describeWithBackends(title: string, suite: (backend: Backend) => void) {
   describe.each(BACKENDS)(`${title} [%s]`, (backend) => {
     beforeAll(() => start(backend), 60_000);

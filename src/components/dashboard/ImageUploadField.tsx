@@ -10,7 +10,6 @@ import type { VehicleCategory } from "@/types";
 interface ImageUploadFieldProps {
   value: string;
   onChange: (value: string) => void;
-  /** Used for the preview when there is no photo yet. */
   color: string;
   category: VehicleCategory;
   name: string;

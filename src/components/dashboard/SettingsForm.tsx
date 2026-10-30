@@ -16,7 +16,6 @@ import { useToast } from "@/components/ui/Toast";
 import { api, errorMessage } from "@/lib/api";
 import { settingsSchema } from "@/lib/schemas";
 import type { BusinessSettings } from "@/types";
-// Set to true to show the "Reset demo data" button in Settings again.
 const SHOW_DEMO_RESET = false;
 
 export function SettingsForm() {
@@ -37,7 +36,6 @@ export function SettingsForm() {
     formState: { errors, isDirty },
   } = useForm<BusinessSettings>({ resolver: zodResolver(settingsSchema) });
 
-  // Fill the form once the data arrives.
   useEffect(() => {
     if (data) reset(data);
   }, [data, reset]);
@@ -52,7 +50,6 @@ export function SettingsForm() {
     onError: (problem) => toast.error(errorMessage(problem)),
   });
 
-  // Puts the demo data back. Every number on the dashboard may change, so refresh everything.
   const resetMutation = useMutation({
     mutationFn: () => api("/api/admin/reset-demo", { method: "POST" }),
     onSuccess: () => {

@@ -12,7 +12,6 @@ export const GET = route(async (_request: Request, { params }: Context) => {
   return json(booking);
 });
 
-/** PATCH /api/bookings/:id: owner changes the status (confirm, start rental, complete, cancel). */
 export const PATCH = route(async (request: Request, { params }: Context) => {
   await requireOwner();
   const { status } = bookingStatusSchema.parse(await readJson(request));

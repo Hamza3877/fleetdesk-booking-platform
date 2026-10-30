@@ -7,25 +7,12 @@ import { getRepository } from "@/server/db";
 import { ConflictError, NotFoundError } from "@/server/errors";
 import type { Booking, BookingListItem, BookingStatus, Paginated } from "@/types";
 
-/**
- * Booking rules. This file decides WHAT is allowed; the repository (src/server/db) only stores data.
- *
- * "pending" means the customer is in checkout. We hold the car for HOLD_MINUTES;
- * if they don't pay in time the hold is released automatically.
- * The allowed status changes live in lib/bookingStatus.ts (shared with the dashboard).
- *
- * Double booking is checked twice: here (for a friendly message) and by the database
- * itself (a constraint in supabase/schema.sql), which also protects against two customers
- * booking at exactly the same moment.
- */
 export const HOLD_MINUTES = 30;
 
-/** Cancel checkouts that were never paid within the hold time. */
 export async function releaseExpiredHolds(now: number = Date.now()): Promise<void> {
   await getRepository().bookings.cancelExpiredHolds(now - HOLD_MINUTES * 60 * 1000);
 }
 
-/** Bookings that currently block the calendar (everything except cancelled ones). */
 export async function getBlockingBookings(filter?: { vehicleId?: string; endsAfter?: string }): Promise<Booking[]> {
   await releaseExpiredHolds();
   return getRepository().bookings.listBlocking(filter);
@@ -72,14 +59,11 @@ export async function createBooking(input: BookingInput): Promise<Booking> {
   });
 }
 
-/** Called once the payment went through. Safe to call twice. */
 export async function markBookingPaid(id: string): Promise<Booking> {
   const booking = await getBooking(id);
   if (!booking) throw new NotFoundError("Booking not found");
   if (booking.paymentStatus === "paid") return booking;
 
-  // The hold may have expired while the customer was paying. Re-confirm only if
-  // nobody else took the dates in the meantime.
   if (booking.status === "cancelled" && !(await isVehicleFree(booking.vehicleId, booking.startDate, booking.endDate, booking.id))) {
     throw new ConflictError("Your checkout expired and the dates were booked by someone else.");
   }
@@ -97,7 +81,6 @@ export async function updateBookingStatus(id: string, status: BookingStatus): Pr
     throw new ConflictError(`A ${booking.status} booking can't be changed to ${status}.`);
   }
 
-  // Cancelling a paid booking refunds it.
   const refund = status === "cancelled" && booking.paymentStatus === "paid";
   const updated = await getRepository().bookings.update(id, {
     status,
@@ -107,7 +90,6 @@ export async function updateBookingStatus(id: string, status: BookingStatus): Pr
   return updated;
 }
 
-/** Search, filter, sort and paginate. The repository does it (in SQL when a database is used). */
 export async function listBookings(query: BookingQuery): Promise<Paginated<BookingListItem>> {
   await releaseExpiredHolds();
   return getRepository().bookings.search(query);

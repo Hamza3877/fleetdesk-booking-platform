@@ -8,7 +8,6 @@ const bodySchema = z.object({
   variables: z.record(z.unknown()).optional(),
 });
 
-/** POST /api/graphql: analytics for the dashboard (owner only). */
 export const POST = route(async (request: Request) => {
   await requireOwner();
   const { query, variables } = bodySchema.parse(await readJson(request));

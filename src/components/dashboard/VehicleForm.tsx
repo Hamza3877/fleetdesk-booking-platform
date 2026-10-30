@@ -38,7 +38,6 @@ function toFormValues(vehicle: Vehicle): VehicleFormValues {
 }
 
 interface VehicleFormProps {
-  /** Pass a vehicle to edit it. Leave empty to add a new one. */
   vehicle?: Vehicle;
   onDone: () => void;
 }
@@ -74,7 +73,6 @@ export function VehicleForm({ vehicle, onDone }: VehicleFormProps) {
     },
   });
 
-  // Number fields need valueAsNumber, otherwise the form would send "5" (text) instead of 5 (number).
   const number = (name: "year" | "seats" | "pricePerDay") => register(name, { valueAsNumber: true });
 
   return (

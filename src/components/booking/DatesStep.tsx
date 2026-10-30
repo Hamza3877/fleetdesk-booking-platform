@@ -26,7 +26,6 @@ export function DatesStep({ defaultValues, bookedRanges, onNext }: DatesStepProp
   const startDate = useWatch({ control, name: "startDate" });
 
   function submit(values: DatesInput) {
-    // The server checks again when the booking is created. This check just gives instant feedback.
     if (hasRangeConflict(bookedRanges, values)) {
       setError("endDate", { message: "This car is already booked for part of that range. Try other dates." });
       return;

@@ -37,7 +37,6 @@ export function BookingsTable() {
   const [searchText, setSearchText] = useState("");
   const [toCancel, setToCancel] = useState<BookingListItem | null>(null);
 
-  // The search box is applied 300ms after the owner stops typing.
   const search = useDebouncedValue(searchText.trim());
   const effectiveQuery = { ...query, search };
 
@@ -51,7 +50,6 @@ export function BookingsTable() {
   const statusMutation = useBookingStatusMutation();
 
   function updateQuery(changes: Partial<BookingQuery>) {
-    // Any change to the filters or sorting starts again from page 1.
     setQuery((current) => ({ ...current, page: 1, ...changes }));
   }
 

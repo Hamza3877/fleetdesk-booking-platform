@@ -1,6 +1,5 @@
 import { Skeleton } from "@/components/ui/Skeleton";
 
-/** Shown instantly while the server prepares the vehicle list. */
 export default function VehiclesLoading() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-10" aria-busy="true" aria-label="Loading vehicles">

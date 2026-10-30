@@ -17,7 +17,6 @@ interface ToastApi {
 
 const ToastContext = createContext<ToastApi | null>(null);
 
-/** Small pop-up messages ("Booking confirmed"). Use it with: const toast = useToast(); toast.success("Saved"). */
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 

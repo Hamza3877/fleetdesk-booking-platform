@@ -8,11 +8,6 @@ import {
   BOOKING_STATUSES,
 } from "@/types";
 
-/**
- * Validation rules, written once and used in two places:
- *  - forms (React Hook Form) show the messages next to each field
- *  - API routes run the same schema, so the server never trusts the browser
- */
 
 const isoDate = z.string().refine(isValidISODate, "Please choose a valid date");
 
@@ -25,7 +20,6 @@ function isHttpUrl(value: string): boolean {
   }
 }
 
-// ---------- Booking ----------
 
 export const datesSchema = z
   .object({ startDate: isoDate, endDate: isoDate })
@@ -60,11 +54,9 @@ export type BookingInput = z.infer<typeof bookingInputSchema>;
 
 export const bookingStatusSchema = z.object({ status: z.enum(BOOKING_STATUSES) });
 
-// ---------- Vehicle ----------
 
 const currentYear = new Date().getFullYear();
 
-/** Shape used by the API. `features` is a list of strings. */
 export const vehicleInputSchema = z.object({
   name: z.string().trim().min(2, "Enter a name").max(60),
   make: z.string().trim().min(2, "Enter the make").max(40),
@@ -89,7 +81,6 @@ export const vehicleInputSchema = z.object({
   description: z.string().trim().min(10, "Write at least 10 characters").max(500, "Keep it under 500 characters"),
   features: z.array(z.string().trim().min(1).max(40)).max(12),
   color: z.string().regex(/^#[0-9a-fA-F]{6}$/, "Pick a colour"),
-  // Empty, a web link, or a small image the owner uploaded (stored as a data: URL).
   imageUrl: z
     .string()
     .max(400_000, "Image is too large")
@@ -105,7 +96,6 @@ export const vehiclePatchSchema = vehicleInputSchema.partial();
 
 export type VehicleInput = z.infer<typeof vehicleInputSchema>;
 
-/** Shape used by the form. Features are typed as one comma separated text field. */
 export const vehicleFormSchema = vehicleInputSchema.omit({ features: true }).extend({
   features: z.string().max(400, "Too long"),
 });
@@ -120,7 +110,6 @@ export function parseFeatures(text: string): string[] {
     .slice(0, 12);
 }
 
-// ---------- Settings & auth ----------
 
 export const settingsSchema = z.object({
   businessName: z.string().trim().min(2, "Enter your business name").max(60),

@@ -3,10 +3,6 @@ import { toTextArray } from "@/server/db/postgresRepository";
 import { SCHEMA_SQL } from "@/server/db/schema";
 import { buildSeedData, type Database } from "@/server/db/seed";
 
-/**
- * Setup helpers: create the tables and fill them with demo data.
- * Used by the app on its first run, by `npm run db:setup` / `db:reset`, by the "Reset demo data" button and by the tests.
- */
 
 export async function applySchema(sql: Sql | TransactionSql): Promise<void> {
   await sql.unsafe(SCHEMA_SQL);
@@ -17,7 +13,6 @@ export async function isEmpty(sql: Sql): Promise<boolean> {
   return Number(count) === 0;
 }
 
-/** Replace everything in the database with the given data. */
 export async function replaceAllData(sql: Sql, data: Database): Promise<void> {
   await sql.begin(async (tx) => {
     await tx`truncate bookings, vehicles restart identity cascade`;
@@ -25,7 +20,6 @@ export async function replaceAllData(sql: Sql, data: Database): Promise<void> {
   });
 }
 
-/** Insert vehicles, bookings and settings. Runs inside a transaction that the caller controls. */
 async function insertAllData(tx: TransactionSql, data: Database): Promise<void> {
   for (const v of data.vehicles) {
     await tx`
@@ -36,7 +30,6 @@ async function insertAllData(tx: TransactionSql, data: Database): Promise<void> 
               ${v.imageUrl}, ${v.status}, ${v.featured}, ${v.createdAt})`;
   }
 
-  // Bookings are inserted in chunks to keep the number of round trips small.
   const chunkSize = 50;
   for (let start = 0; start < data.bookings.length; start += chunkSize) {
     const rows = data.bookings.slice(start, start + chunkSize).map((b) => ({
@@ -56,7 +49,6 @@ async function insertAllData(tx: TransactionSql, data: Database): Promise<void> 
     await tx`insert into bookings ${tx(rows)}`;
   }
 
-  // Continue numbering after the highest seeded reference.
   const highest = data.bookings.reduce((max, b) => Math.max(max, Number.parseInt(b.reference.slice(3), 10)), 1000);
   await tx`select setval('booking_reference_seq', ${highest})`;
 
@@ -69,15 +61,8 @@ async function insertAllData(tx: TransactionSql, data: Database): Promise<void> 
       phone = excluded.phone, city = excluded.city`;
 }
 
-// An arbitrary number that names "first-time setup" for PostgreSQL advisory locks.
 const SETUP_LOCK_ID = 727_411;
 
-/**
- * First run on a new database: create the tables and load the demo data. Does nothing when the tables already exist.
- *
- * On a host like Vercel several server instances can start at the same moment. The advisory lock makes them take
- * turns; the second one sees that the tables now exist and skips setup, so the demo data is loaded exactly once.
- */
 export async function ensureDatabaseReady(sql: Sql): Promise<void> {
   const tablesExist = async (db: Sql | TransactionSql) => {
     const [{ exists }] = await db<{ exists: boolean }[]>`select to_regclass('public.vehicles') is not null as exists`;

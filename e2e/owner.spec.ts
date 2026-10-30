@@ -18,7 +18,6 @@ test("a wrong password is rejected", async ({ page }) => {
 test("the owner sees the overview, searches bookings and signs out", async ({ page }) => {
   await signInAsOwner(page);
 
-  // KPI cards and charts are loaded through the GraphQL endpoint
   await expect(page.getByText("Average booking")).toBeVisible();
   await expect(page.getByText("Top vehicles")).toBeVisible();
 

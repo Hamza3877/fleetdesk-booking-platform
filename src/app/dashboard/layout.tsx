@@ -9,7 +9,6 @@ export const metadata: Metadata = { title: { default: "Dashboard", template: "%s
 export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
-  // Every dashboard page passes through here, so this one check protects them all.
   const session = await getSession();
   if (!session) redirect("/login");
 

@@ -1,12 +1,7 @@
 @import "tailwindcss";
 
-/* Dark mode is switched by adding the "dark" class to <html> (see ThemeProvider). */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/*
- * Design tokens. Components use names like bg-card or text-muted-foreground
- * instead of raw colours, so light/dark mode and re-branding only touch this file.
- */
 :root {
   --background: #f8fafc;
   --foreground: #0f172a;
@@ -84,8 +79,9 @@
   --color-info-bg: var(--info-bg);
   --color-ring: var(--ring);
 
-  /* System font stack: no network request, so pages render fast. */
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
 }
 
 @layer base {
@@ -121,7 +117,6 @@
 }
 
 .fade-in {
-  /* "both" keeps the content hidden during the delay and visible afterwards */
   animation: fade-in 0.35s ease-out both;
 }
 

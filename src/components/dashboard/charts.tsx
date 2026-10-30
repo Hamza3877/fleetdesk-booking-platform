@@ -6,7 +6,6 @@ import { formatShortDate } from "@/lib/dates";
 import { formatCurrency } from "@/lib/utils";
 import type { Analytics } from "@/types";
 
-/** Colours come from CSS variables in globals.css, so charts follow light/dark mode automatically. */
 const axisProps = {
   tickLine: false,
   axisLine: false,

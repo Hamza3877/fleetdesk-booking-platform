@@ -1,6 +1,5 @@
 import { BOOKING_STATUSES, type BookingStatus } from "@/types";
 
-/** Options for the bookings table: filter, sort and page. Shared by the API and the UI. */
 
 export const BOOKING_SORT_FIELDS = ["createdAt", "startDate", "totalPrice", "customerName"] as const;
 export type BookingSortField = (typeof BOOKING_SORT_FIELDS)[number];
@@ -30,7 +29,6 @@ function toPositiveInt(value: string | null, fallback: number): number {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
-/** Read the query string safely: unknown or broken values fall back to the defaults. */
 export function parseBookingQuery(params: URLSearchParams): BookingQuery {
   const status = params.get("status");
   const sortBy = params.get("sortBy");

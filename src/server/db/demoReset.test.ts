@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { expect, it } from "vitest";
 import { addDays, todayISO } from "@/lib/dates";
 import { resetDemoData } from "@/server/db";
@@ -16,7 +15,6 @@ describeWithBackends("resetDemoData", () => {
       settings: await getSettings(),
     };
 
-    // A visitor makes a mess: adds a car, books it, renames the business, deletes a car that has no history.
     const added = await createVehicle({
       name: "Visitor Car", make: "Test", model: "Car", year: 2024, category: "compact", transmission: "manual",
       fuel: "petrol", seats: 4, pricePerDay: 30, description: "Added by a visitor to the demo.", features: [],
