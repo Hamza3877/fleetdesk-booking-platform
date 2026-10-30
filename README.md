@@ -4,10 +4,10 @@ A booking and operations app for a small car rental business. Customers pick a c
 
 **Live demo:** https://fleetdesk-booking-platform.vercel.app
 
-|             |                                                                                       |
-| ----------- | ------------------------------------------------------------------------------------- |
-| Owner login | `owner@fleetdesk.dev` / `demo1234` (the login page has a "Fill in demo login" button) |
-| Test card   | `4242 4242 4242 4242`, any future date, any CVC (`4000 0000 0000 0002` is declined)   |
+|             |                                                                                     |
+| ----------- | ----------------------------------------------------------------------------------- |
+| Owner login | `owner@fleetdesk.dev` / `demo1234` (the login page has a "Fill in login" button)    |
+| Test card   | `4242 4242 4242 4242`, any future date, any CVC (`4000 0000 0000 0002` is declined) |
 
 ## Screenshots
 
@@ -49,8 +49,6 @@ A booking and operations app for a small car rental business. Customers pick a c
 
 ![Setting](docs/screenshots/setting.png)
 
-This is a portfolio project. Payments run in test mode and no real money moves. The demo data is made up, and the owner can reset it from Settings.
-
 ## What it does
 
 **Customer side**
@@ -65,7 +63,7 @@ This is a portfolio project. Payments run in test mode and no real money moves. 
 - Overview: revenue, paid pickups, occupancy and top vehicles, with charts for 7, 30 or 90 days.
 - Bookings: search, filter by status, sort, page through results, and move a booking through picked up, returned or cancelled. The row updates immediately and rolls back if the server says no.
 - Fleet: add, edit and delete cars, upload a photo, or mark a car as in maintenance to hide it from the site.
-- Settings: business details, dark mode, and a button that restores the demo data.
+- Settings: business details, dark mode, and a button .
 
 ## Tech stack
 
