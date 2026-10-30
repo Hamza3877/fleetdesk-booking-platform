@@ -2,7 +2,7 @@ import { GraphQLSchema, buildSchema, graphql } from "graphql";
 import { getAnalytics } from "@/server/services/analyticsService";
 
 
-export const typeDefs = /* GraphQL */ `
+export const typeDefs =`
   type Query {
     analytics(days: Int = 30): Analytics!
   }

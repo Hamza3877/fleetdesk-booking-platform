@@ -45,7 +45,7 @@ export function verifySessionToken(token: string | undefined, now: number = Date
 export async function setSessionCookie(email: string): Promise<void> {
   const store = await cookies();
   store.set(SESSION_COOKIE, createSessionToken(email), {
-    httpOnly: true, // JavaScript in the browser can't read it
+    httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",

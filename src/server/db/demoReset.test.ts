@@ -26,7 +26,7 @@ describeWithBackends("resetDemoData", () => {
       customerName: "Visitor", customerEmail: "visitor@example.com", customerPhone: "+1 555 0000",
     });
     await updateSettings({ ...before.settings, businessName: "Renamed By Visitor" });
-    await expect(deleteVehicle(added.id)).rejects.toThrow(); // has a booking, so it stays until the reset
+    await expect(deleteVehicle(added.id)).rejects.toThrow();
 
     await resetDemoData();
 

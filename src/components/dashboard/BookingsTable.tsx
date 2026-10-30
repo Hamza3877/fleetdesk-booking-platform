@@ -43,7 +43,7 @@ export function BookingsTable() {
   const { data, isPending, isError, error, refetch, isPlaceholderData } = useQuery({
     queryKey: ["bookings", effectiveQuery],
     queryFn: () => api<Paginated<BookingListItem>>(`/api/bookings?${bookingQueryToParams(effectiveQuery)}`),
-    placeholderData: keepPreviousData, // keep showing the old rows while the next page loads
+    placeholderData: keepPreviousData,
   staleTime: 0,// always fetch fresh bookings when this page opens
   });
 

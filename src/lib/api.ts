@@ -37,7 +37,7 @@ export function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : "Something went wrong. Please try again.";
 }
 
-const ANALYTICS_QUERY = /* GraphQL */ `
+const ANALYTICS_QUERY =`
   query Analytics($days: Int!) {
     analytics(days: $days) {
       kpis { revenue revenueChange bookings occupancyRate averageBookingValue }

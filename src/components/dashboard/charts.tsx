@@ -25,8 +25,7 @@ function ChartCard({ title, description, children }: { title: string; descriptio
     <Card className="p-5">
       <h3 className="font-semibold">{title}</h3>
       <p className="mb-4 text-sm text-muted-foreground">{description}</p>
-      {/* role="img" + label: screen readers get a summary instead of a pile of SVG shapes */}
-      <div role="img" aria-label={`${title}. ${description}`} className="h-64">
+            <div role="img" aria-label={`${title}. ${description}`} className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           {children as React.ReactElement}
         </ResponsiveContainer>

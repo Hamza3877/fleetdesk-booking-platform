@@ -108,8 +108,7 @@ export function VehicleForm({ vehicle, onDone }: VehicleFormProps) {
 
       <div className="flex flex-wrap items-center gap-6">
         <div className="w-40">
-          {/* Controlled on purpose: its value comes from the form state (see useWatch above). */}
-          <Input
+                    <Input
             label="Illustration colour"
             type="color"
             className="p-1"

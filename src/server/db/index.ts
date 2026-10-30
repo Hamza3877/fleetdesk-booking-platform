@@ -58,10 +58,10 @@ export function getRepository(): Repository {
 }
 
 export async function resetDemoData(): Promise<void> {
-  getRepository(); // makes sure the store (and its connection) exists
+  getRepository();
   const sql = globalForRepo.__fleetdeskSql;
   if (sql) {
-    await ensureDatabaseReady(sql); // the tables must exist before they can be emptied
+    await ensureDatabaseReady(sql);
     await replaceAllData(sql, buildSeedData());
   } else {
     resetMemoryDb();

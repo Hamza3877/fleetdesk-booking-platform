@@ -73,7 +73,7 @@ export async function ensureDatabaseReady(sql: Sql): Promise<void> {
 
   await sql.begin(async (tx) => {
     await tx`select pg_advisory_xact_lock(${SETUP_LOCK_ID})`;
-    if (await tablesExist(tx)) return; // another instance finished while we waited
+    if (await tablesExist(tx)) return;
     await applySchema(tx);
     await insertAllData(tx, buildSeedData());
   });

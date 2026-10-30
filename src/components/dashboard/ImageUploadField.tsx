@@ -30,7 +30,7 @@ export function ImageUploadField({ value, onChange, color, category, name }: Ima
       setError(problem instanceof Error ? problem.message : "Could not read that image.");
     } finally {
       setBusy(false);
-      if (inputRef.current) inputRef.current.value = ""; // allows picking the same file again
+      if (inputRef.current) inputRef.current.value = "";
     }
   }
 
