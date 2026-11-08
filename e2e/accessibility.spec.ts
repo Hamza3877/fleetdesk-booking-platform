@@ -12,6 +12,7 @@ async function expectNoViolations(page: Page, name: string) {
 }
 
 async function setTheme(page: Page, theme: "light" | "dark") {
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.evaluate((value) => document.documentElement.classList.toggle("dark", value === "dark"), theme);
 }
 
