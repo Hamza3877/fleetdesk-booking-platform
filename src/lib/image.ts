@@ -1,7 +1,3 @@
-/**
- * Shrinks an image the owner picked so it is small enough to store and fast to load.
- * It draws the photo onto a canvas (max 900px wide) and exports a compressed JPEG as a data URL.
- */
 const MAX_WIDTH = 900;
 const MAX_FILE_BYTES = 8 * 1024 * 1024;
 

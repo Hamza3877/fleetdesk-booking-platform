@@ -4,15 +4,12 @@ import { randomTrip, ready } from "./helpers";
 test("a customer finds a car, books it and pays with the test card", async ({ page }) => {
   const trip = randomTrip();
 
-  // 1. Find a car
   await page.goto("/");
   await page.getByRole("link", { name: "Browse the fleet" }).click();
   await expect(page.getByRole("heading", { name: "Our fleet" })).toBeVisible();
   await page.locator('a[href^="/vehicles/veh_"]').first().click();
   await ready(page);
 
-  // 2. Pick dates on the vehicle page. The price shows up live.
-  // Retried as a whole: on a cold server the first typing can land just before React is ready.
   await expect(async () => {
     await page.getByLabel("Pickup").fill(trip.start);
     await page.getByLabel("Return").fill(trip.end);
@@ -22,7 +19,6 @@ test("a customer finds a car, books it and pays with the test card", async ({ pa
   await page.getByRole("button", { name: "Continue to booking" }).click();
   await ready(page);
 
-  // 3. Step 1 is already filled in. Step 2: details (with validation).
   await expect(page.getByRole("heading", { name: "When do you need the car?" })).toBeVisible();
   await page.getByRole("button", { name: "Continue" }).click();
   await expect(page.getByRole("heading", { name: "Who is driving?" })).toBeVisible();
@@ -35,22 +31,18 @@ test("a customer finds a car, books it and pays with the test card", async ({ pa
   await page.getByLabel("Phone").fill("+92 300 1234567");
   await page.getByRole("button", { name: "Continue" }).click();
 
-  // 4. Review and pay
   await expect(page.getByRole("heading", { name: "Check everything, then pay" })).toBeVisible();
   await expect(page.getByText("Ayesha Khan")).toBeVisible();
   await page.getByRole("button", { name: /^Pay \$/ }).click();
 
-  // 5. Test checkout page (the card is pre-filled with the working test card)
   await expect(page).toHaveURL(/\/checkout\/bk_/);
   await ready(page);
   await page.getByRole("button", { name: /Pay \$/ }).click();
 
-  // 6. Confirmation
   await expect(page).toHaveURL(/\/booking\/bk_/);
   await expect(page.getByRole("heading", { name: "You're all set!" })).toBeVisible();
   await expect(page.getByText(/FD-\d+/).first()).toBeVisible();
 
-  // 7. The same dates can't be booked again: the calendar panel warns and the button stays disabled.
   await page.goto(vehicleUrl);
   await ready(page);
   await page.getByLabel("Pickup").fill(trip.start);

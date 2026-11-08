@@ -5,7 +5,6 @@ import { calculateQuote } from "@/lib/pricing";
 import { formatCurrency } from "@/lib/utils";
 import type { Vehicle } from "@/types";
 
-/** The price box shown next to every step, so the customer always sees what they will pay. */
 export function BookingSummary({ vehicle, startDate, endDate }: { vehicle: Vehicle; startDate: string; endDate: string }) {
   const hasDates = Boolean(startDate && endDate && endDate > startDate);
   const quote = hasDates ? calculateQuote(vehicle.pricePerDay, startDate, endDate) : null;

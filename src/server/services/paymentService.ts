@@ -3,15 +3,6 @@ import { getBooking, markBookingPaid } from "@/server/services/bookingService";
 import { getVehicle } from "@/server/services/vehicleService";
 import type { Booking } from "@/types";
 
-/**
- * Payments, with two modes:
- *
- *  1. Built-in test checkout (default). Works with no account. Use card 4242 4242 4242 4242.
- *  2. Real Stripe Checkout in TEST mode, turned on by setting STRIPE_SECRET_KEY=sk_test_...
- *
- * Both modes follow the same steps, so the UI doesn't care which one is active:
- *   createCheckout(booking) -> { url } -> customer pays -> confirmPayment(booking) -> booking is confirmed
- */
 
 const siteUrl = () => process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const stripeKey = () => process.env.STRIPE_SECRET_KEY;
@@ -59,7 +50,6 @@ export async function createCheckout(bookingId: string): Promise<{ url: string }
   return { url: String(session.url) };
 }
 
-/** Test checkout form. Only the test cards are accepted. */
 export async function payWithTestCard(bookingId: string, cardNumber: string): Promise<Booking> {
   const digits = cardNumber.replace(/\D/g, "");
   if (digits === TEST_CARD_DECLINED) throw new ValidationError("Your card was declined. Try the test card 4242 4242 4242 4242.");
@@ -67,7 +57,6 @@ export async function payWithTestCard(bookingId: string, cardNumber: string): Pr
   return markBookingPaid(bookingId);
 }
 
-/** Called when the customer comes back from Stripe. Checks with Stripe that the payment really happened. */
 export async function confirmStripeSession(sessionId: string): Promise<Booking | undefined> {
   if (!isStripeEnabled()) return undefined;
   const session = await stripeRequest(`checkout/sessions/${encodeURIComponent(sessionId)}`);

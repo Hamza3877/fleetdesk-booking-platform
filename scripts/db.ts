@@ -1,11 +1,3 @@
-/**
- * Database setup for Supabase / PostgreSQL.
- *
- *   npm run db:setup   create the tables, and add demo data if the database is empty
- *   npm run db:reset   wipe everything and load fresh demo data (dates are relative to today)
- *
- * It reads DATABASE_URL from .env.local (or from the environment).
- */
 import { existsSync, readFileSync } from "node:fs";
 import { applySchema, isEmpty, replaceAllData } from "../src/server/db/postgresAdmin";
 import { createSql } from "../src/server/db/postgresRepository";

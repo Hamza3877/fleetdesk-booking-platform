@@ -15,7 +15,6 @@ export const metadata: Metadata = {
 
 export default async function VehiclesPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const filters = parseVehicleFilters(await searchParams);
-  // Rendered on the server: the HTML already contains the results, so it is fast and good for SEO.
   const vehicles = await listVehicles({ ...filters, status: "available" });
   const dates = filters.startDate && filters.endDate ? { startDate: filters.startDate, endDate: filters.endDate } : undefined;
 

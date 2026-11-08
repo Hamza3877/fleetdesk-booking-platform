@@ -37,21 +37,19 @@ export function BookingsTable() {
   const [searchText, setSearchText] = useState("");
   const [toCancel, setToCancel] = useState<BookingListItem | null>(null);
 
-  // The search box is applied 300ms after the owner stops typing.
   const search = useDebouncedValue(searchText.trim());
   const effectiveQuery = { ...query, search };
 
   const { data, isPending, isError, error, refetch, isPlaceholderData } = useQuery({
     queryKey: ["bookings", effectiveQuery],
     queryFn: () => api<Paginated<BookingListItem>>(`/api/bookings?${bookingQueryToParams(effectiveQuery)}`),
-    placeholderData: keepPreviousData, // keep showing the old rows while the next page loads
-  staleTime: 0,// always fetch fresh bookings when this page opens
+    placeholderData: keepPreviousData,
+  staleTime: 0,
   });
 
   const statusMutation = useBookingStatusMutation();
 
   function updateQuery(changes: Partial<BookingQuery>) {
-    // Any change to the filters or sorting starts again from page 1.
     setQuery((current) => ({ ...current, page: 1, ...changes }));
   }
 

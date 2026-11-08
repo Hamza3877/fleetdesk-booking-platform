@@ -18,10 +18,6 @@ const sizes: Record<Size, string> = {
   lg: "h-12 px-6 text-base",
 };
 
-/**
- * Class names for a button. Exported so a <Link> can look exactly like a button:
- *   <Link href="/vehicles" className={buttonStyles({ variant: "primary" })}>Browse</Link>
- */
 export function buttonStyles({
   variant = "primary",
   size = "md",
@@ -39,7 +35,6 @@ export function buttonStyles({
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: Size;
-  /** Shows a spinner and disables the button while something is saving. */
   loading?: boolean;
 }
 
