@@ -10,10 +10,6 @@ interface ModalProps {
   children: ReactNode;
 }
 
-/**
- * Modal built on the native <dialog> element. The browser handles the hard parts for us:
- * focus is trapped inside, Escape closes it, and the page behind becomes inert.
- */
 export function Modal({ open, onClose, title, children }: ModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -29,7 +25,6 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
       ref={dialogRef}
       onClose={onClose}
       onClick={(event) => {
-        // A click on the dark backdrop is a click on the <dialog> itself.
         if (event.target === dialogRef.current) onClose();
       }}
       aria-labelledby="modal-title"

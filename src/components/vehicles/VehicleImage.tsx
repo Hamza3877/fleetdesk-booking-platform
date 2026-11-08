@@ -2,12 +2,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import type { Vehicle, VehicleCategory } from "@/types";
 
-/**
- * Shows the vehicle photo when the owner added one. Otherwise it draws a simple car
- * illustration in the vehicle's colour, so the demo looks good with no image files.
- */
 
-// Body shape per category: [body height, cabin height, cabin start x, cabin end x]
 const SHAPES: Record<VehicleCategory, { body: number; cabin: number; from: number; to: number }> = {
   compact: { body: 30, cabin: 26, from: 82, to: 190 },
   sedan: { body: 30, cabin: 26, from: 90, to: 200 },
@@ -51,7 +46,6 @@ export function VehicleImage({ vehicle, className, priority }: { vehicle: Pick<V
   return (
     <div className={cn("relative overflow-hidden bg-gradient-to-br from-muted to-accent", className)}>
       {vehicle.imageUrl ? (
-        // unoptimized: owners can paste any image link without us configuring allowed domains.
         <Image src={vehicle.imageUrl} alt={vehicle.name} fill unoptimized priority={priority} sizes="(min-width: 1024px) 33vw, 100vw" className="object-cover" />
       ) : (
         <div className="flex h-full w-full items-center justify-center p-4">

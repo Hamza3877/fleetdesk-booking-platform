@@ -1,4 +1,3 @@
-/** Errors the API knows how to turn into a clean HTTP response (see http.ts). */
 
 export class AppError extends Error {
   constructor(

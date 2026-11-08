@@ -4,7 +4,6 @@ import { getSession, requireOwner } from "@/server/auth";
 import { json, readJson, route } from "@/server/http";
 import { createVehicle, listVehicles } from "@/server/services/vehicleService";
 
-/** GET /api/vehicles: public list. Add ?scope=all (owner only) to include vehicles in maintenance. */
 export const GET = route(async (request: Request) => {
   const params = new URL(request.url).searchParams;
   const filters = parseVehicleFilters(searchParamsToRecord(params));
@@ -16,7 +15,6 @@ export const GET = route(async (request: Request) => {
   return json(await listVehicles({ ...filters, status: "available" }));
 });
 
-/** POST /api/vehicles: owner adds a vehicle. */
 export const POST = route(async (request: Request) => {
   await requireOwner();
   const input = vehicleInputSchema.parse(await readJson(request));

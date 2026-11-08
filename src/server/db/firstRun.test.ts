@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { PGlite } from "@electric-sql/pglite";
@@ -19,7 +18,6 @@ describe("schema copies", () => {
   });
 });
 
-/** A brand-new, completely empty database, like a Supabase project nobody has set up yet. */
 describe("first run on an empty database", () => {
   let pglite: PGlite;
   let server: PGLiteSocketServer;
@@ -44,11 +42,9 @@ describe("first run on an empty database", () => {
   }, 30_000);
 
   it("creates the tables and loads the demo data on the first request, with no setup command", async () => {
-    // Nothing exists yet.
     const [{ exists }] = await sql<{ exists: boolean }[]>`select to_regclass('public.vehicles') is not null as exists`;
     expect(exists).toBe(false);
 
-    // The app just asks for data, as the home page would.
     const vehicles = await getRepository().vehicles.list();
     expect(vehicles.length).toBe(buildSeedData().vehicles.length);
     expect((await getRepository().settings.get()).businessName).toBe("Summit Rentals");

@@ -22,7 +22,6 @@ export function FleetManager() {
   const queryClient = useQueryClient();
   const toast = useToast();
 
-  // `editing`: undefined = form closed, null = adding a new vehicle, a Vehicle = editing that one.
   const [editing, setEditing] = useState<Vehicle | null | undefined>(undefined);
   const [toDelete, setToDelete] = useState<Vehicle | null>(null);
 
@@ -41,7 +40,6 @@ export function FleetManager() {
     onSettled: () => setToDelete(null),
   });
 
-  // Newest vehicles first. The sort is stable, so cars added at the same time keep their order.
 const newestFirst = [...(data ?? [])].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   const columns: Column<Vehicle>[] = [
     {

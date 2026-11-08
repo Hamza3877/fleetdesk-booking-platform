@@ -2,21 +2,10 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import { cookies } from "next/headers";
 import { UnauthorizedError } from "@/server/errors";
 
-/**
- * Owner login with a signed cookie. No external service and no database needed.
- *
- * The cookie holds "<payload>.<signature>". The payload is the owner's email and an
- * expiry time; the signature is an HMAC made with AUTH_SECRET. Anyone can read the
- * cookie, but nobody can change it without breaking the signature.
- *
- * In production you would replace this with Supabase Auth, Auth.js or similar.
- * Only this file and the login route would need to change.
- */
 
 export const SESSION_COOKIE = "fd_session";
 const SESSION_SECONDS = 60 * 60 * 8;
 
-// Local defaults so the demo works out of the box. Set real values in .env.local.
 const secret = () => process.env.AUTH_SECRET ?? "fleetdesk-local-dev-secret-change-me";
 const ownerEmail = () => process.env.OWNER_EMAIL ?? "owner@fleetdesk.dev";
 const ownerPassword = () => process.env.OWNER_PASSWORD ?? "demo1234";
@@ -56,7 +45,7 @@ export function verifySessionToken(token: string | undefined, now: number = Date
 export async function setSessionCookie(email: string): Promise<void> {
   const store = await cookies();
   store.set(SESSION_COOKIE, createSessionToken(email), {
-    httpOnly: true, // JavaScript in the browser can't read it
+    httpOnly: true,
     sameSite: "lax",
     secure: process.env.NODE_ENV === "production",
     path: "/",
@@ -68,12 +57,10 @@ export async function clearSessionCookie(): Promise<void> {
   (await cookies()).delete(SESSION_COOKIE);
 }
 
-/** The signed-in owner, or null. Used by server components and layouts. */
 export async function getSession(): Promise<{ email: string } | null> {
   return verifySessionToken((await cookies()).get(SESSION_COOKIE)?.value);
 }
 
-/** Call at the top of a protected API route. Throws 401 when not signed in. */
 export async function requireOwner(): Promise<{ email: string }> {
   const session = await getSession();
   if (!session) throw new UnauthorizedError();

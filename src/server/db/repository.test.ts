@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { expect, it } from "vitest";
 import { addDays, todayISO } from "@/lib/dates";
 import { getRepository } from "@/server/db";
@@ -28,7 +27,6 @@ const newVehicle: VehicleInput = {
 
 const customer = { customerName: "Repo Tester", customerEmail: "repo@example.com", customerPhone: "+1 555 0101" };
 
-/** Contract tests: both data stores must behave identically. */
 describeWithBackends("repository contract", () => {
   it("saves and reads a vehicle, including awkward characters in its features", async () => {
     const created = await createVehicle(newVehicle);
@@ -96,7 +94,6 @@ describeWithBackends("repository contract", () => {
       repo.bookings.insert({ ...base, id: "bk_over_2", startDate: addDays(start, 2), endDate: addDays(start, 6) }),
     ).rejects.toThrow(ConflictError);
 
-    // Back-to-back is fine, and a cancelled booking never blocks anyone.
     await expect(repo.bookings.insert({ ...base, id: "bk_over_3", startDate: addDays(start, 4), endDate: addDays(start, 5) })).resolves.toBeDefined();
     await expect(
       repo.bookings.insert({ ...base, id: "bk_over_4", status: "cancelled", startDate: start, endDate: addDays(start, 4) }),

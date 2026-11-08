@@ -7,7 +7,6 @@ import type {
   VehicleStatus,
 } from "@/types";
 
-/** Human readable names for the enum values stored in the data. */
 
 export const CATEGORY_LABELS: Record<VehicleCategory, string> = {
   compact: "Compact",

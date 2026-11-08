@@ -2,12 +2,6 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { ready, signInAsOwner } from "./helpers";
 
-/**
- * Automated accessibility check (axe) against the WCAG 2.1 A and AA rules,
- * on every main screen, in light and dark mode.
- * Automated checks catch about a third of accessibility problems (contrast, labels, roles, names).
- * They don't replace trying the keyboard and a screen reader yourself.
- */
 
 async function expectNoViolations(page: Page, name: string) {
   const results = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
@@ -60,7 +54,6 @@ for (const theme of THEMES) {
         await page.goto(path);
         await ready(page);
         await page.getByRole("heading", { level: 1 }).waitFor();
-        // Charts and tables animate in. Let them settle before scanning.
         await page.waitForTimeout(1200);
         await setTheme(page, theme);
         await expectNoViolations(page, `dashboard ${name} (${theme})`);

@@ -1,13 +1,3 @@
-/**
- * A throwaway PostgreSQL server for trying database mode WITHOUT a Supabase account.
- *
- *   npm run db:local       (leave it running in one terminal)
- *
- * Then put this in .env.local and run `npm run db:setup`:
- *   DATABASE_URL=postgres://postgres:postgres@127.0.0.1:5433/postgres
- *
- * It uses PGlite (PostgreSQL compiled to WebAssembly) and keeps its files in ./.pglite
- */
 import { PGlite } from "@electric-sql/pglite";
 import { btree_gist } from "@electric-sql/pglite/contrib/btree_gist";
 import { PGLiteSocketServer } from "@electric-sql/pglite-socket";

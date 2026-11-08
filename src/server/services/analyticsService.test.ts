@@ -1,4 +1,3 @@
-// @vitest-environment node
 import { expect, it } from "vitest";
 import { describeWithBackends } from "@/server/testing/backends";
 import { getAnalytics } from "@/server/services/analyticsService";

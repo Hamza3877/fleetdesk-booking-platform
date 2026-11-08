@@ -38,7 +38,6 @@ function toFormValues(vehicle: Vehicle): VehicleFormValues {
 }
 
 interface VehicleFormProps {
-  /** Pass a vehicle to edit it. Leave empty to add a new one. */
   vehicle?: Vehicle;
   onDone: () => void;
 }
@@ -74,7 +73,6 @@ export function VehicleForm({ vehicle, onDone }: VehicleFormProps) {
     },
   });
 
-  // Number fields need valueAsNumber, otherwise the form would send "5" (text) instead of 5 (number).
   const number = (name: "year" | "seats" | "pricePerDay") => register(name, { valueAsNumber: true });
 
   return (
@@ -110,8 +108,7 @@ export function VehicleForm({ vehicle, onDone }: VehicleFormProps) {
 
       <div className="flex flex-wrap items-center gap-6">
         <div className="w-40">
-          {/* Controlled on purpose: its value comes from the form state (see useWatch above). */}
-          <Input
+                    <Input
             label="Illustration colour"
             type="color"
             className="p-1"

@@ -7,7 +7,6 @@ const schema = z.object({
   cardNumber: z.string().min(1, "Enter a card number"),
 });
 
-/** The built-in test checkout. Only test card numbers are accepted. */
 export const POST = route(async (request: Request) => {
   const { bookingId, cardNumber } = schema.parse(await readJson(request));
   return json(await payWithTestCard(bookingId, cardNumber));

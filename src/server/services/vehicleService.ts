@@ -10,7 +10,6 @@ export async function listVehicles(filters: VehicleFilters = {}): Promise<Vehicl
   const search = filters.search?.toLowerCase();
   const vehicles = await getRepository().vehicles.list();
 
-  // Only load bookings when the customer asked for specific dates.
   const wantsDates = Boolean(filters.startDate && filters.endDate);
   const blocking = wantsDates ? await getBlockingBookings() : [];
 
@@ -56,7 +55,6 @@ export async function deleteVehicle(id: string): Promise<void> {
   if (upcoming.length > 0) {
     throw new ConflictError("This vehicle has upcoming bookings. Cancel them first or mark it as in maintenance.");
   }
-  // Past bookings are the business's revenue history, so a vehicle that has any is kept.
   if (await repo.bookings.hasAnyForVehicle(id)) {
     throw new ConflictError("This vehicle has booking history, so it can't be deleted. Mark it as in maintenance to hide it from the website.");
   }
@@ -64,7 +62,6 @@ export async function deleteVehicle(id: string): Promise<void> {
   await repo.vehicles.remove(id);
 }
 
-/** Days when the vehicle is already taken (past bookings are left out). */
 export async function getBookedRanges(vehicleId: string): Promise<DateRange[]> {
   const bookings = await getBlockingBookings({ vehicleId, endsAfter: todayISO() });
   return bookings

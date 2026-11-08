@@ -23,11 +23,6 @@ const CATEGORY_OPTIONS = [
   ...VEHICLE_CATEGORIES.map((category) => ({ value: category, label: CATEGORY_LABELS[category] })),
 ];
 
-/**
- * The filter bar is a normal HTML form. Submitting it changes the URL (?category=suv&maxPrice=80),
- * and the page re-renders on the server with the new filters. Benefits: results can be shared as
- * a link, the back button works, and search engines can read the results.
- */
 export function VehicleFilters({ initial }: { initial: Filters }) {
   const router = useRouter();
   const [startDate, setStartDate] = useState(initial.startDate ?? "");
@@ -52,7 +47,6 @@ export function VehicleFilters({ initial }: { initial: Filters }) {
 
   function handleStartChange(value: string) {
     setStartDate(value);
-    // Keep the return date after the pickup date.
     if (!endDate || endDate <= value) setEndDate(value ? addDays(value, 1) : "");
   }
 
